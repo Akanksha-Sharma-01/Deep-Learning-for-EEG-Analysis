@@ -20,26 +20,38 @@ def preprocess(eeg_data, label):
 	data = np.array(data)
 	return data,labels
 
-TrainData = eeg_data[:int(np.shape(eeg_data)[0]*0.9),:,:]
-TrainLabel = label[:int(np.shape(eeg_data)[0]*0.9)]
+TrainData = eeg_data[:int(np.shape(eeg_data)[0]*0.8),:,:]
+TrainLabel = label[:int(np.shape(eeg_data)[0]*0.8)]
+ValData = eeg_data[int(np.shape(eeg_data)[0]*0.8):int(np.shape(eeg_data)[0]*0.9),:,:]
+ValLabel = label[int(np.shape(eeg_data)[0]*0.8):int(np.shape(eeg_data)[0]*0.9)]
 TestData = eeg_data[int(np.shape(eeg_data)[0]*0.9):,:,:]
 TestLabel = label[int(np.shape(eeg_data)[0]*0.9):]
 
+print(np.shape(TrainData))
+print(np.shape(ValData))
+print(np.shape(TestData))
+
 TrainData, TrainLabel = preprocess(TrainData, TrainLabel)
+ValData, ValLabel = preprocess(ValData, ValLabel)
 TestData, TestLabel = preprocess(TestData, TestLabel)
 
 TrainData = np.reshape(TrainData, [TrainData.shape[0], 128,220,1])
 TrainLabel = np.reshape(TrainLabel, [TrainLabel.shape[0],])
+ValData = np.reshape(ValData, [ValData.shape[0], 128,220,1])
+ValLabel = np.reshape(ValLabel, [ValLabel.shape[0],])
 TestData = np.reshape(TestData, [TestData.shape[0], 128,220,1])
 TestLabel = np.reshape(TestLabel, [TestLabel.shape[0],])
 
-print(np.max(TrainData))
-print(np.max(TestData))
+print(np.shape(TrainData))
+print(np.shape(ValData))
+print(np.shape(TestData))
 
-#model = keras.models.load_model("/home/arnav/Desktop/Akanksha/40ClassModel1Bi_LSTM22.h5")
+model = keras.models.load_model("/home/arnav/Desktop/Akanksha/40ClassModel1Transformer15Epoch.h5")
 
-#TrainAcc = model.evaluate(TrainData, TrainLabel)
-#TestAcc = model.evaluate(TestData,TestLabel)
+TrainAcc = model.evaluate(TrainData, TrainLabel)
+ValAcc = model.evaluate(ValData, ValLabel)
+TestAcc = model.evaluate(TestData,TestLabel)
 
-#print("Training Accuracy",TrainAcc)
-#print("Test Accuracy",TestAcc)
+print("Training Accuracy",TrainAcc)
+print("Validation Accuracy",ValAcc)
+print("Test Accuracy",TestAcc)
